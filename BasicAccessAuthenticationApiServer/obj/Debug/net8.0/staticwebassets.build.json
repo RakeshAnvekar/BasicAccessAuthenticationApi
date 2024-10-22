@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "qA6cZ5qxBEqYm6KrZrM9UU7ZA030xPJNlJJf+HcUg2c=",
+  "Source": "BasicAccessAuthenticationApiServer",
+  "BasePath": "_content/BasicAccessAuthenticationApiServer",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
