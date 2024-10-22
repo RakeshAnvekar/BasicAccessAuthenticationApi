@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BasicAccessAuthenticationApiServer.Repositories.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Text;
 
@@ -21,14 +22,14 @@ public  class BasicAuthenticationFilter : IAuthorizationFilter
         var credentialBytes = Convert.FromBase64String(encodedCredentials);
         var credentials = Encoding.UTF8.GetString(credentialBytes).Split(':', 2);
 
-        if (credentials.Length != 2 || !IsValidUser(credentials[0], credentials[1]))
+        if (credentials.Length != 2 || !IsValidUserAsync(credentials[0], credentials[1]))
         {
             context.Result = new UnauthorizedResult();
         }
 
-         bool IsValidUser(string username, string password)
+           bool IsValidUserAsync(string username, string password)
         {
-            return username == "yourUsername" && password == "yourPassword";
+            return true;
         }
     }
 }
