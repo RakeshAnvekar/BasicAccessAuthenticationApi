@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 #region Business Logic
 //a new instance is created for every http request.
 builder.Services.AddScoped<IAccountInformationLogic, AccountInformationLogic>();
+builder.Services.AddScoped<IUserLoginLogic, UserLoginLogic>();
 #endregion
 
 #region DataBase
@@ -23,10 +24,12 @@ builder.Services.AddSingleton<IDataBaseExecutor, DataBaseExecutor>();
 
 #region Mappers
 builder.Services.AddSingleton<IAccountInformationMapper, AccountInformationMapper>();
+builder.Services.AddSingleton<IUserLoginMappers, UserLoginMappers>();
 #endregion
 
 #region Repository
 builder.Services.AddSingleton<IAccountInformationRepository, AccountInformationRepository>();
+builder.Services.AddSingleton<IUserLoginRepository, UserLoginRepository>();
 #endregion
 
 

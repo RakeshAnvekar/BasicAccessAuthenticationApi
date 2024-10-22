@@ -1,4 +1,5 @@
 ﻿using BasicAccessAuthenticationApiServer.BusinessLogic.Interfaces;
+using BasicAccessAuthenticationApiServer.Filters;
 using BasicAccessAuthenticationApiServer.Models.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,11 @@ namespace BasicAccessAuthenticationApiServer.Controllers
             _userLoginLogic=userLoginLogic;
             _logger=logger;
         }
-        public async Task<IActionResult> IsUserValid([FromForm] User user)
+
+        [HttpGet]
+        [ActionName("GetAccontDetails")]
+        [ServiceFilter(typeof(BasicAuthenticationFilter))]
+        public async Task<IActionResult> Get([FromForm] User user)
         {
             try
             {
