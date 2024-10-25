@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BasicAccessAuthenticationApiServer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bb84cf8e9f855f9764dfbede0497a00291b6da30")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d5277752e93d8bafad8d24ceb0d2b63d077cb2ba")]
 [assembly: System.Reflection.AssemblyProductAttribute("BasicAccessAuthenticationApiServer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BasicAccessAuthenticationApiServer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
