@@ -2,6 +2,7 @@
 using BasicAccessAuthenticationApiServer.Executor;
 using BasicAccessAuthenticationApiServer.Mappers.Interfaces;
 using BasicAccessAuthenticationApiServer.Repositories.Interfaces;
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace BasicAccessAuthenticationApiServer.Repositories;
@@ -22,7 +23,19 @@ public class UserLoginRepository : IUserLoginRepository
         if (string.IsNullOrEmpty(UserName)) throw new ArgumentNullException(nameof(UserName));
         if (string.IsNullOrEmpty(Password)) throw new ArgumentNullException(nameof(Password));
 
-      var result=  await _dataBaseExecutor.ExecuteQueryAsync(DbConstants.USP_IsValidUser, CommandType.StoredProcedure,_userLoginMappers.MapUserLogin, cancellationToken);
+        var inputParametrs = new Dictionary<string, object?>()
+        {
+            {"@UserName",UserName },
+            {"@Password",Password },
+          
+        };
+        var outputParametrs = new Dictionary<string, object?>()
+        {
+          { "@IsValid",false }
+           
+
+        };
+        var result = await _dataBaseExecutor.ExecuteSpAsync(DbConstants.USP_IsValidUser, CommandType.StoredProcedure, _userLoginMappers.MapUserLogin, cancellationToken, inputParametrs, outputParametrs);
         if(result!=null && result.IsValid==true) return true;
         return false;
     }

@@ -5,9 +5,14 @@ using System.Text;
 
 namespace BasicAccessAuthenticationApiServer.Filters;
 
-public  class BasicAuthenticationFilter : IAuthorizationFilter
+public  class BasicAuthenticationFilter : IAsyncAuthorizationFilter
 {
-    public void OnAuthorization(AuthorizationFilterContext context)
+    private readonly IUserLoginRepository _userLoginRepository;
+    public BasicAuthenticationFilter(IUserLoginRepository userLoginRepository)
+    {
+        _userLoginRepository = userLoginRepository;
+    }
+    public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
     {
         if (!context.HttpContext.Request.Headers.TryGetValue("Authorization", out var authHeader))
         {
@@ -21,16 +26,12 @@ public  class BasicAuthenticationFilter : IAuthorizationFilter
         var encodedCredentials = authHeader.ToString().Substring("Basic ".Length).Trim();
         var credentialBytes = Convert.FromBase64String(encodedCredentials);
         var credentials = Encoding.UTF8.GetString(credentialBytes).Split(':', 2);
-
-        if (credentials.Length != 2 || !IsValidUserAsync(credentials[0], credentials[1]))
+        CancellationTokenSource tokenSource = new CancellationTokenSource();
+        if (credentials.Length != 2 || !await _userLoginRepository.IsValisUserAsync(credentials[0], credentials[1], tokenSource.Token))
         {
             context.Result = new UnauthorizedResult();
         }
-
-           bool IsValidUserAsync(string username, string password)
-        {
-            return true;
-        }
+       
     }
 }
 

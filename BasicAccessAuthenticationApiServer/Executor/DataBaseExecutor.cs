@@ -84,4 +84,54 @@ public sealed class DataBaseExecutor : IDataBaseExecutor
             throw;
         }
     }
+    public async Task<T> ExecuteSpAsync<T>(string sql, CommandType commandType, Func<SqlParameter[], T> mapper, CancellationToken cancellation, Dictionary<string, object?>? inputParameters = null, Dictionary<string, object?>? outputParameters = null)
+    {
+        try
+        {
+            var stopWatch = Stopwatch.StartNew();
+            await using var connection = new SqlConnection(_connectionOptions.ConnectionString);
+            await using var command = connection.CreateCommand();
+            await connection.OpenAsync();
+            command.CommandText = sql;
+            command.CommandType = commandType;
+            command.CommandTimeout = 60 * 30;
+            if (inputParameters != null)
+            {
+                foreach (var key in inputParameters.Keys)
+                {
+                    command.Parameters.AddWithValue(key, inputParameters[key] == null ? DBNull.Value : inputParameters[key]);
+
+                }
+            }
+            var outputParameterList = new List<SqlParameter>();
+            if (outputParameters!=null)
+            {
+                SqlParameter outputParam;
+                foreach (var key in outputParameters.Keys)
+                {
+
+                    outputParam = new SqlParameter(key, outputParameters[key])
+                    {
+                        Direction = ParameterDirection.Output
+                    };
+                    command.Parameters.Add(outputParam);
+                    outputParameterList.Add(outputParam);
+                }
+            }
+           
+
+            var reader = await command.ExecuteNonQueryAsync(cancellation);
+
+            var results = mapper(outputParameterList.ToArray());
+            connection.Close();
+            return results;
+        }
+        catch (Exception ex)
+        {
+            if (cancellation.IsCancellationRequested)
+                throw new OperationCanceledException("Operation cancelled by user", ex, cancellation);
+            _logger.LogError(ex, "SQL Server read query error");
+            throw;
+        }
+    }
 }

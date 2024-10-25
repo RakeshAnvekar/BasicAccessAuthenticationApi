@@ -42,7 +42,7 @@ builder.Services.AddScoped<BasicAuthenticationFilter>();
 
 builder.Services.AddControllers(options =>
 {
-    options.Filters.Add(new BasicAuthenticationFilter());
+    options.Filters.AddService<BasicAuthenticationFilter>();
 });
 #endregion
 
@@ -61,7 +61,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-//app.UseAuthorization();
+app.UseAuthorization();
 
 app.MapControllers();
 
